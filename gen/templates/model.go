@@ -730,9 +730,9 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	{{- $cname := toGoName .TfName}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{if .ResponseDataPath}}{{.ResponseDataPath}}{{else}}{{if .DataPath}}{{.DataPath}}.{{end}}{{.ModelName}}{{end}}"); value.Exists(){{if and .NullOnEmpty (eq .Type "String")}} && value.String() != ""{{end}} {
-		data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+		data.{{toGoName .TfName}} = types.{{.Type}}Value({{if and (eq .Type "Float64") .RoundDecimals}}planmodifiers.RoundTo(value.Float(), {{.RoundDecimals}}){{else}}value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}(){{end}})
 	}{{if or .FallbackResponseDataPath .FallbackResponseModelName}} else if value := res.Get("{{if .FallbackResponseDataPath}}{{.FallbackResponseDataPath}}{{else}}{{.FallbackResponseModelName}}{{end}}"); value.Exists(){{if and .NullOnEmpty (eq .Type "String")}} && value.String() != ""{{end}} {
-		data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+		data.{{toGoName .TfName}} = types.{{.Type}}Value({{if and (eq .Type "Float64") .RoundDecimals}}planmodifiers.RoundTo(value.Float(), {{.RoundDecimals}}){{else}}value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}(){{end}})
 	}{{end}} else {
 		{{- if .DefaultValue}}
 		data.{{toGoName .TfName}} = types.{{.Type}}Value({{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}})
@@ -919,9 +919,9 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 	{{- else if and (not .Value) (not .WriteOnly) (not .Reference) (not .CreateQueryPath) (not .QueryParamNoBody)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{if .ResponseDataPath}}{{.ResponseDataPath}}{{else}}{{if .DataPath}}{{.DataPath}}.{{end}}{{.ModelName}}{{end}}"); value.Exists(){{if and .NullOnEmpty (eq .Type "String")}} && value.String() != ""{{end}} && !data.{{toGoName .TfName}}.IsNull() {
-		data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+		data.{{toGoName .TfName}} = types.{{.Type}}Value({{if and (eq .Type "Float64") .RoundDecimals}}planmodifiers.RoundTo(value.Float(), {{.RoundDecimals}}){{else}}value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}(){{end}})
 	}{{if or .FallbackResponseDataPath .FallbackResponseModelName}} else if value := res.Get("{{if .FallbackResponseDataPath}}{{.FallbackResponseDataPath}}{{else}}{{.FallbackResponseModelName}}{{end}}"); value.Exists(){{if and .NullOnEmpty (eq .Type "String")}} && value.String() != ""{{end}} && !data.{{toGoName .TfName}}.IsNull() {
-		data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+		data.{{toGoName .TfName}} = types.{{.Type}}Value({{if and (eq .Type "Float64") .RoundDecimals}}planmodifiers.RoundTo(value.Float(), {{.RoundDecimals}}){{else}}value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}(){{end}})
 	}{{end}} else {{if .DefaultValue}}if data.{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
 		data.{{toGoName .TfName}} = types.{{.Type}}Null()
 	}

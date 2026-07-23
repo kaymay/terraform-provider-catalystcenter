@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 
+	"github.com/CiscoDevNet/terraform-provider-catalystcenter/internal/provider/planmodifiers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -102,12 +103,12 @@ func (data *Building) fromBody(ctx context.Context, res gjson.Result) {
 		data.Address = types.StringNull()
 	}
 	if value := res.Get("response.latitude"); value.Exists() {
-		data.Latitude = types.Float64Value(value.Float())
+		data.Latitude = types.Float64Value(planmodifiers.RoundTo(value.Float(), 5))
 	} else {
 		data.Latitude = types.Float64Null()
 	}
 	if value := res.Get("response.longitude"); value.Exists() {
-		data.Longitude = types.Float64Value(value.Float())
+		data.Longitude = types.Float64Value(planmodifiers.RoundTo(value.Float(), 5))
 	} else {
 		data.Longitude = types.Float64Null()
 	}
@@ -138,12 +139,12 @@ func (data *Building) updateFromBody(ctx context.Context, res gjson.Result) {
 		data.Address = types.StringNull()
 	}
 	if value := res.Get("response.latitude"); value.Exists() && !data.Latitude.IsNull() {
-		data.Latitude = types.Float64Value(value.Float())
+		data.Latitude = types.Float64Value(planmodifiers.RoundTo(value.Float(), 5))
 	} else {
 		data.Latitude = types.Float64Null()
 	}
 	if value := res.Get("response.longitude"); value.Exists() && !data.Longitude.IsNull() {
-		data.Longitude = types.Float64Value(value.Float())
+		data.Longitude = types.Float64Value(planmodifiers.RoundTo(value.Float(), 5))
 	} else {
 		data.Longitude = types.Float64Null()
 	}

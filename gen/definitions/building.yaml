@@ -37,11 +37,15 @@ attributes:
     type: Float64
     description: Latitude
     example: 37.338
+    custom_modifier: planmodifiers.Coordinate5DecimalPlanModifier
+    round_decimals: 5
   - model_name: longitude
     response_data_path: response.longitude
     type: Float64
     description: Longitude
     example: -121.832
+    custom_modifier: planmodifiers.Coordinate5DecimalPlanModifier
+    round_decimals: 5
 test_prerequisites: |
   data "catalystcenter_site" "test" {
     name_hierarchy = "Global"

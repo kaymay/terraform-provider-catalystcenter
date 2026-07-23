@@ -219,6 +219,7 @@ type YamlConfigAttribute struct {
 	NoPut                     bool                  `yaml:"no_put"`
 	NullOnEmpty               bool                  `yaml:"null_on_empty"`
 	CustomModifier            string                `yaml:"custom_modifier"`
+	RoundDecimals             int                   `yaml:"round_decimals"`
 	AlwaysInclude             bool                  `yaml:"always_include"`
 }
 

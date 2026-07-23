@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-catalystcenter/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-catalystcenter/internal/provider/planmodifiers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -89,10 +90,16 @@ func (r *BuildingResource) Schema(ctx context.Context, req resource.SchemaReques
 			"latitude": schema.Float64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Latitude").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.Float64{
+					planmodifiers.Coordinate5DecimalPlanModifier{},
+				},
 			},
 			"longitude": schema.Float64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Longitude").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.Float64{
+					planmodifiers.Coordinate5DecimalPlanModifier{},
+				},
 			},
 		},
 	}
